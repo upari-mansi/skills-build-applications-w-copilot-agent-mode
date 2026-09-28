@@ -1,12 +1,15 @@
 import cors from 'cors';
 import express from 'express';
+import { apiBaseUrl } from './config/apiUrl.js';
 import { connectDatabase } from './config/database.js';
+import { apiRouter } from './routes/api.js';
 
 const app = express();
-const port = Number(process.env.PORT) || 8000;
+const port = 8000;
 
 app.use(cors());
 app.use(express.json());
+app.use('/api', apiRouter);
 
 app.get('/api/health', (_request, response) => {
   response.json({ status: 'ok' });
@@ -15,7 +18,7 @@ app.get('/api/health', (_request, response) => {
 async function startServer(): Promise<void> {
   await connectDatabase();
   app.listen(port, '0.0.0.0', () => {
-    console.log(`OctoFit API listening on port ${port}`);
+    console.log(`OctoFit API available at ${apiBaseUrl}`);
   });
 }
 
